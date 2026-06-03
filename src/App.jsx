@@ -9,6 +9,7 @@ import SettingsPage from './pages/SettingsPage.jsx';
 import SoonPage from './pages/SoonPage.jsx';
 import WrapStudies from './pages/WrapStudies.jsx';
 import ContentStudy from './pages/ContentStudy.jsx';
+import WallStudy from './pages/WallStudy.jsx';
 import WrapReview from './pages/WrapReview.jsx';
 import GlowLoveWrap from './components/glowlove/GlowLoveWrap.jsx';
 import WrapPage from './pages/WrapPage.jsx';
@@ -40,6 +41,7 @@ export default function App() {
       <Route path="/wrap-studies" element={<WrapStudies />} />
       <Route path="/wrap-studies/:screen" element={<WrapStudies />} />
       <Route path="/content-study" element={<ContentStudy />} />
+      <Route path="/wall-study" element={<WallStudy />} />
       <Route path="/wrap-review" element={<WrapReview />} />
       <Route path="/wrap-review/:topic" element={<WrapReview />} />
       {/* Wrap embedded in the brand-portal shell (sidebar + header). */}
