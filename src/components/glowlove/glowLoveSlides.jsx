@@ -219,7 +219,7 @@ export function Cover() {
     <div className="gl-slide gl-slide--center">
       <Sparkles data={COVER_SPARKLES} />
       <span className="gl-eyebrow">{BRAND} · {CAMPAIGN}</span>
-      <h1 className="gl-h1 gl-h1--serif">Your campaign report<br /><span className="gl-accent">is ready.</span></h1>
+      <h1 className="gl-h1">Your campaign report<br /><span className="gl-accent">is ready.</span></h1>
       <p className="gl-sub">Check out your results and highlights.</p>
     </div>
   );
@@ -250,7 +250,7 @@ export function Reach() {
   return (
     <div className="gl-slide gl-slide--center gl-reach2">
       <span className="gl-eyebrow">Reach</span>
-      <h2 className="gl-h2 gl-reach2__h">Generated <span className="gl-accent">brand awareness</span><br />with over {fmt(total)} people.</h2>
+      <h2 className="gl-h2 gl-reach2__h">Generated <span className="gl-accent">brand awareness</span><br />with over <span className="gl-accent">{fmt(total)}</span> people.</h2>
       <div className={`gl-hwrap gl-hwrap--dense ${play ? 'play' : ''}`} aria-hidden="true">
         {HEART.map((p, i) => {
           const d = Math.hypot(p[2], p[3] - 0.15);

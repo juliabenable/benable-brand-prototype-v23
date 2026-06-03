@@ -3,7 +3,6 @@ import { SLIDES, FloatingEmojis } from './glowLoveSlides.jsx';
 import { BRAND } from '../../data/glowCampaign.js';
 import '../../styles/glow-love.css';
 
-const SLIDE_MS = 7500;
 const SLIDE_KEY = 'gl-wrap-slide-idx';
 const readStoredIndex = () => {
   try {
@@ -21,7 +20,6 @@ const readStoredIndex = () => {
    to the slide they were on — not the cover. */
 export default function GlowLoveWrap({ onBack, embedded = false }) {
   const [index, setIndex] = useState(readStoredIndex);
-  const [paused, setPaused] = useState(false);
   const count = SLIDES.length;
   // Prev/next are debounced ~250ms so a single accidental double-click
   // (or a touch device's two-event quirk) can't step the index twice.
@@ -52,14 +50,6 @@ export default function GlowLoveWrap({ onBack, embedded = false }) {
   }, [onBack]);
 
   useEffect(() => {
-    if (paused || isLast) return undefined;
-    // Slides can opt into a longer dwell (e.g. the content coverflow needs
-    // time to cycle through ~10 pieces before advancing).
-    const id = setTimeout(next, slide.ms || SLIDE_MS);
-    return () => clearTimeout(id);
-  }, [index, paused, isLast, next, slide.ms]);
-
-  useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'ArrowRight') next();
       else if (e.key === 'ArrowLeft') prev();
@@ -74,9 +64,6 @@ export default function GlowLoveWrap({ onBack, embedded = false }) {
       <div className="gl-frame">
         <article
           className={`gl-stage gl-grad--${slide.grad} ${slide.dark ? 'gl-stage--dark' : ''}`}
-          onMouseDown={() => setPaused(true)}
-          onMouseUp={() => setPaused(false)}
-          onMouseLeave={() => setPaused(false)}
         >
           {slide.emoji && <FloatingEmojis />}
 
@@ -97,15 +84,21 @@ export default function GlowLoveWrap({ onBack, embedded = false }) {
         </article>
 
         <button type="button" className="gl-arrow gl-arrow--prev" onClick={prev} disabled={index === 0} aria-label="Previous slide">
-          <svg className="gl-arrow__svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polyline points="14.5 18 8.5 12 14.5 6" />
-          </svg>
+          <span className="gl-arrow__ic">
+            <svg className="gl-arrow__svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="14.5 18 8.5 12 14.5 6" />
+            </svg>
+          </span>
+          <span className="gl-arrow__lbl">Back</span>
         </button>
         {!isLast && (
           <button type="button" className="gl-arrow gl-arrow--next" onClick={next} aria-label="Next slide">
-            <svg className="gl-arrow__svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="9.5 18 15.5 12 9.5 6" />
-            </svg>
+            <span className="gl-arrow__ic">
+              <svg className="gl-arrow__svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="9.5 18 15.5 12 9.5 6" />
+              </svg>
+            </span>
+            <span className="gl-arrow__lbl">Next</span>
           </button>
         )}
       </div>

@@ -219,10 +219,12 @@
 /* Arrows centered to the slide BODY (which sits below the chrome bar
    that takes the top ~52px of the stage). We anchor to the body center
    rather than the geometric stage center so they don't read as low. */
-.gl-arrow { position: absolute; top: calc(50% - 26px); transform: translateY(-50%); z-index: 6; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,0.7); color: #6b4f80; font-size: 24px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(120,80,140,0.16); transition: transform 0.15s ease; }
-.gl-arrow:hover:not(:disabled) { transform: translateY(-50%) scale(1.1); }
-.gl-arrow:disabled { opacity: 0.3; cursor: default; }
-.gl-arrow--prev { left: -56px; } .gl-arrow--next { right: -56px; }
+.gl-arrow { position: absolute; top: calc(50% - 26px); transform: translateY(-50%); z-index: 6; border: 0; background: transparent; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 7px; transition: transform 0.15s ease; }
+.gl-arrow__ic { width: 50px; height: 50px; border-radius: 50%; background: #fff; color: var(--c-purple); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(120,80,140,0.26); transition: box-shadow 0.15s ease, transform 0.15s ease; }
+.gl-arrow__lbl { font-family: var(--font-body); font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #6b4f80; }
+.gl-arrow:hover:not(:disabled) .gl-arrow__ic { transform: scale(1.08); box-shadow: 0 10px 24px rgba(120,80,140,0.34); }
+.gl-arrow:disabled { opacity: 0.32; cursor: default; }
+.gl-arrow--prev { left: -72px; } .gl-arrow--next { right: -72px; }
 
 @media (max-width: 900px) {
   .gl-slide--split { grid-template-columns: 1fr; }
@@ -557,7 +559,10 @@
 /* Compact title — single-line h2, line-height + padding-bottom give the
    gradient-clipped accent ("13 new pieces") room for descenders so the
    purple letters don't get cut off at the bottom. */
-.gl-content2__h { font-size: clamp(21px, 2.6vw, 30px); line-height: 1.3; padding-bottom: 0.12em; margin: var(--head-gap) auto 0; max-width: 760px; }
+/* margin-inline:auto wins over the general `.gl-cnt-head .gl-h2 { margin:… 0 0 }`
+   rule (equal specificity, declared later) so the width-capped title stays
+   centered in its container instead of sitting left-aligned. */
+.gl-content2__h, .gl-cnt-head .gl-content2__h { font-size: clamp(21px, 2.6vw, 30px); line-height: 1.3; padding-bottom: 0.12em; margin: var(--head-gap) auto 0; max-width: 760px; }
 .gl-content2__h .gl-accent { display: inline-block; padding-bottom: 0.08em; }
 /* ---------- Content · COVERFLOW FLIP CAROUSEL ----------
    Compact stack: the active card sits center-front at full size; its
