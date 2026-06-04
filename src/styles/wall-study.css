@@ -63,6 +63,22 @@
 .wsl-phone__t { font-size: 13px; line-height: 1.35; color: #333; margin-top: 1px; }
 .wsl-phone__t .m { color: #a06bff; font-weight: 600; }
 
+/* ── Original grid (the "other design") for >10 comments ──
+   Mirrors the production .gl-wall: 4-col grid, denser cards, bottom-fade
+   mask so it reads as "so much love it overflows." */
+.wsl-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  width: 100%; max-width: 880px; margin: 0 auto; max-height: 430px;
+  overflow: hidden; align-content: start;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+}
+.wsl-grid .wsl-card { padding: 11px 12px; box-shadow: 0 6px 16px rgba(80,50,90,0.10); }
+.wsl-grid .wsl-card__plat { width: 20px; height: 20px; top: 9px; right: 9px; font-size: 10px; }
+.wsl-grid .wsl-card__av { width: 30px; height: 30px; font-size: 13px; }
+.wsl-grid .wsl-card__u { font-size: 11px; }
+.wsl-grid .wsl-card__t { font-size: 13.5px; line-height: 1.35; }
+
 /* ── E · scatter / collage ── */
 .wsl-scatter { position: relative; width: 100%; max-width: 760px; height: 400px; margin: 0 auto; }
 .wsl-scatter .wsl-card { position: absolute; width: 250px; }
