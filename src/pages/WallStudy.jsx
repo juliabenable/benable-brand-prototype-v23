@@ -9,7 +9,7 @@ import { avColor } from '../data/wrappedComments.js';
  * fade covers nothing. These directions celebrate a small set instead.
  */
 
-// A representative handful of real first-campaign comments (max 7).
+// A representative set of real first-campaign comments (up to 10).
 const PICKS = [
   { t: 'Your skin looks so smooth and glowy!!✨😍 I need to try @28litsea 😍😍', u: 'alondraambrizm', p: 'tt' },
   { t: 'that glow from the body oil is insane', u: 'mollymmcqueen', p: 'tt' },
@@ -18,9 +18,12 @@ const PICKS = [
   { t: 'Omgsh you are glowing! Need this!', u: 'lyindalynn', p: 'tt' },
   { t: 'Cute packaging and that glow 🤌', u: 'thattwinmomrn', p: 'tt' },
   { t: '✨I wish I could smell it!! It looks amazing!', u: 'clairethebear11', p: 'ig' },
+  { t: 'Loving that glow ✨💕', u: 'kayfordayss', p: 'tt' },
+  { t: 'Oh wow! I need to try this', u: 'stephriveraxo', p: 'tt' },
+  { t: 'Gosh the instant glow 🤩🤩🤩', u: 'linnyboo88', p: 'tt' },
 ];
 
-const TILT = ['-1.4deg', '1.2deg', '-1deg', '1.6deg', '-1.6deg', '1deg', '-0.8deg'];
+const TILT = ['-1.4deg', '1.2deg', '-1deg', '1.6deg', '-1.6deg', '1deg', '-0.8deg', '1.3deg', '-1.2deg', '0.9deg'];
 const PLAT = (p) => (p === 'tt' ? '♪' : '◎');
 
 function mention(t) {
@@ -47,7 +50,7 @@ function Head({ count }) {
   return (
     <div className="wsl-head">
       <span className="wsl-eyebrow">Real excitement, great engagement</span>
-      <h3>{count} comments. <em>All love.</em></h3>
+      <h3>{count} comment{count === 1 ? '' : 's'}. <em>All love.</em></h3>
     </div>
   );
 }
@@ -64,9 +67,10 @@ function DirColumn({ items }) {
   );
 }
 
-/* B — centered 2-col cluster (tight variant when ≤3) */
+/* B — centered 2-col cluster. A lone comment shows as one wide card;
+   everything else is 2-col with the odd card centering on its last row. */
 function DirCluster({ items }) {
-  const tight = items.length <= 3;
+  const tight = items.length === 1;
   return (
     <div className="wsl-stage">
       <Head count={items.length} />
@@ -168,32 +172,40 @@ function Study({ id, title, desc, theme = 'love', children }) {
 
 export default function WallStudy() {
   const five = PICKS.slice(0, 5);
+  const counts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
     <div className="cst">
       <header className="cst-top">
         <span className="cst-top__kicker">Benable · Campaign Wrapped</span>
-        <h1>Wall of Love — when there are fewer than 8 comments</h1>
-        <p>The live wall is a 4-column grid + bottom fade tuned for 40+ comments — great when there are many, but with a handful it looks sparse and the fade covers nothing. Five directions below celebrate a small set instead. Each is shown at 5 comments; the recommended direction is also shown at 3 and 7.</p>
+        <h1>Wall of Love — Direction B, comments 1 → 10</h1>
+        <p>Direction B (centered 2-col cluster) at every count from 1 to 10. A lone comment shows as one wide card; from 2 up it&rsquo;s a centered 2-column cluster with the odd card centering on its last row — full and balanced at every count, never the sparse-grid look. Other directions explored are at the bottom for reference.</p>
       </header>
 
       <div className="cst-rec">
-        <b>Recommendation — make it adaptive on comment count:</b>
+        <b>How B scales across 1–10:</b>
         <ul>
-          <li><code>≥ 8</code> → keep today&rsquo;s grid + overflow fade (it earns the &ldquo;so much love&rdquo; read)</li>
-          <li><code>4–7</code> → <b>Direction B</b> (centered 2-col cluster) — full but never sparse</li>
-          <li><code>1–3</code> → <b>Direction C</b> (hero pull-quote) — turns a few comments into a featured moment</li>
+          <li><code>1</code> → one wide centered card</li>
+          <li><code>2–10</code> → centered 2-col cluster; an odd final card centers on its own row</li>
+          <li><code>8–10</code> → still tidy at 4–5 rows; this is also where you could hand off to the original grid if you prefer the &ldquo;wall&rdquo; read</li>
         </ul>
       </div>
+
+      {counts.map((n) => (
+        <Study key={n} id={`B·${n}`} title={`${n} comment${n === 1 ? '' : 's'}`} desc={n === 1 ? 'Single wide card, centered.' : `Centered 2-col cluster${n % 2 ? ' — odd card centers on the last row' : ''}.`}>
+          <DirCluster items={PICKS.slice(0, n)} />
+        </Study>
+      ))}
+
+      <header className="cst-top" style={{ marginTop: 28 }}>
+        <h1 style={{ fontSize: 26 }}>Other directions explored (at 5 comments)</h1>
+        <p>Kept for reference — the directions that didn&rsquo;t win.</p>
+      </header>
 
       <Study id="A" title="Centered column" desc="Single centered stack of larger cards, gentle alternating tilt. Simplest; reads as a short testimonial list.">
         <DirColumn items={five} />
       </Study>
 
-      <Study id="B" title="Centered 2-col cluster" desc="Larger cards clustered at center (not stretched full-width). Recommended for 4–7.">
-        <DirCluster items={five} />
-      </Study>
-
-      <Study id="C" title="Hero pull-quote + chips" desc="Feature the standout comment as a serif pull-quote, a few supporting chips below. Recommended for 1–3.">
+      <Study id="C" title="Hero pull-quote + chips" desc="Feature the standout comment as a serif pull-quote, a few supporting chips below.">
         <DirHero items={five} />
       </Study>
 
@@ -205,24 +217,7 @@ export default function WallStudy() {
         <DirScatter items={five} />
       </Study>
 
-      <header className="cst-top" style={{ marginTop: 18 }}>
-        <h1 style={{ fontSize: 26 }}>Robustness — recommended directions at other counts</h1>
-        <p>How the recommended layouts hold up as the count shrinks or grows within the &lt;8 range.</p>
-      </header>
-
-      <Study id="C·1" title="Hero — 1 comment" desc="Single comment: pure pull-quote, no chips. The strongest small-count case.">
-        <DirHero items={PICKS.slice(0, 1)} />
-      </Study>
-
-      <Study id="B·3" title="Cluster — 3 comments" desc="Tight variant collapses to a centered single column so 3 never looks like a broken grid.">
-        <DirCluster items={PICKS.slice(0, 3)} />
-      </Study>
-
-      <Study id="B·7" title="Cluster — 7 comments" desc="Upper edge of the range — still centered and full, just before the grid takes over at 8.">
-        <DirCluster items={PICKS.slice(0, 7)} />
-      </Study>
-
-      <footer className="cst-foot">Wall of Love · low-count study. Tell me which direction to build into the deck (and confirm the 8-comment threshold).</footer>
+      <footer className="cst-foot">Wall of Love · Direction B across 1–10. Tell me if you want it wired into the deck and where to hand off to the grid (if at all).</footer>
     </div>
   );
 }
