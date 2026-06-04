@@ -601,10 +601,12 @@
    so 1–4 pieces read as a balanced set rather than a lopsided carousel
    (the coverflow's wrap math goes asymmetric below ~5 cards). */
 .gl-cf--gallery { display: flex; align-items: center; justify-content: center; gap: 22px; perspective: none; -webkit-mask-image: none; mask-image: none; }
-.gl-cf--gallery .gl-cf-card { position: static; top: auto; left: auto; flex: 0 0 auto; width: 204px; height: 362px; }
-.gl-cf--g1 .gl-cf-card { width: 236px; height: 418px; }
-.gl-cf--g4 { gap: 16px; }
-.gl-cf--g4 .gl-cf-card { width: 188px; height: 334px; }
+/* Real card size (matches the coverflow's active card). g1 is a larger hero
+   since it stands alone; g4 trims slightly so four fit the slide width. */
+.gl-cf--gallery .gl-cf-card { position: static; top: auto; left: auto; flex: 0 0 auto; width: 210px; height: 372px; }
+.gl-cf--g1 .gl-cf-card { width: 248px; height: 440px; }
+.gl-cf--g4 { gap: 14px; }
+.gl-cf--g4 .gl-cf-card { width: 196px; height: 347px; }
 .gl-ring-card__img {
   display: block; width: 100%; height: 100%;
   background: #ccc center/cover no-repeat;

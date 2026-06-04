@@ -461,7 +461,10 @@ const VerifiedTick = ({ size = 13 }) => (
   </svg>
 );
 
-export function ContentSpotlight({ maxItems = null, staticIdx = null, layout = 'coverflow' } = {}) {
+/* Below this many pieces the 3D coverflow goes lopsided (its wrap math
+   needs cards on both sides), so we switch to a static centered gallery. */
+const GALLERY_MAX = 4;
+export function ContentSpotlight({ maxItems = null, staticIdx = null, layout = 'auto' } = {}) {
   // One carousel mixes reel posts + Benable rec cards; both flip through
   // the same compact coverflow. Interleave ~1 Benable rec after every 2
   // reel posts so the Benable cards surface early — the deck only lingers
@@ -484,7 +487,9 @@ export function ContentSpotlight({ maxItems = null, staticIdx = null, layout = '
   // staticIdx freezes the active card (no auto-flip) for screenshots.
   const items = useMemo(() => (maxItems != null ? allItems.slice(0, maxItems) : allItems), [allItems, maxItems]);
   const N = items.length;
-  const gallery = layout === 'gallery';
+  // 'auto' (default, production): gallery when ≤4 pieces, else coverflow.
+  // 'gallery' / 'coverflow' force a layout (used by the design study).
+  const gallery = layout === 'gallery' || (layout === 'auto' && N <= GALLERY_MAX);
   const [idx, setIdx] = useState(staticIdx != null ? staticIdx : 0);
 
   useEffect(() => {

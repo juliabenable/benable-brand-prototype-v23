@@ -1,11 +1,6 @@
-/* ── Content carousel · low-count (1–4 pieces) study ──────────────────────
-   The wrap's content slide uses a 3D coverflow tuned for ~10+ pieces. Below
-   ~5 its wrap math goes asymmetric (empty/lopsided sides). This study shows
-   the current coverflow vs. a recommended centered gallery at 1–4 pieces.
-   Each card is the real 960×720 wrap stage, scaled down to compare side by side. */
-.ccs-pair { display: flex; gap: 40px; flex-wrap: wrap; align-items: flex-start; }
-.ccs-col { flex: 1 1 0; min-width: 0; }
-.ccs-cap { font-size: 13px; color: rgba(255,255,255,0.55); margin: 0 0 10px; }
-.ccs-cap b { color: #fff; font-weight: 700; }
-.ccs-box { width: 518px; height: 389px; max-width: 100%; overflow: hidden; border-radius: 18px; box-shadow: 0 18px 48px rgba(0,0,0,0.4); }
-.ccs-box .gl-stage { transform: scale(0.54); transform-origin: top left; box-shadow: none; }
+/* ── Content carousel · centered gallery for 1–4 pieces (real size) ───────
+   The wrap's content slide auto-switches from the 3D coverflow to this
+   static centered gallery when a campaign has ≤4 pieces. Shown here at the
+   real 960×720 deck size for handoff. */
+.ccs-stagewrap { display: flex; justify-content: center; }
+.ccs-stagewrap .gl-stage { box-shadow: 0 24px 60px rgba(0,0,0,0.42); }

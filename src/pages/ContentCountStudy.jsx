@@ -3,27 +3,20 @@ import '../styles/content-count-study.css';
 import { ContentSpotlight } from '../components/glowlove/glowLoveSlides.jsx';
 
 /**
- * Design study — the wrap's CONTENT carousel at low counts (1, 2, 3, 4).
- * Left: the current 3D coverflow (frozen on the first card). Right: a
- * recommended centered "gallery" — a static, balanced row that doesn't
- * rely on the coverflow's wrap math (which goes lopsided below ~5 cards).
+ * Final design — the wrap's CONTENT slide uses a centered "gallery" (a
+ * static, balanced row) when a campaign has 1–4 pieces, instead of the 3D
+ * coverflow (which goes lopsided below ~5 cards). Shown at real deck size.
  */
-
-function StageCard({ children }) {
-  return (
-    <div className="ccs-box">
-      <div className="gl-stage gl-grad--f">
-        <div className="gl-body">{children}</div>
-      </div>
-    </div>
-  );
-}
 
 function Study({ id, title, desc, children }) {
   return (
     <section className="cst-study">
       <div className="cst-study__label"><span className="cst-study__id">{id}</span><b>{title}</b><small>{desc}</small></div>
-      {children}
+      <div className="ccs-stagewrap">
+        <div className="gl-stage gl-grad--f">
+          <div className="gl-body">{children}</div>
+        </div>
+      </div>
     </section>
   );
 }
@@ -34,35 +27,17 @@ export default function ContentCountStudy() {
     <div className="cst">
       <header className="cst-top">
         <span className="cst-top__kicker">Benable · Campaign Wrapped</span>
-        <h1>Content carousel — 1 to 4 pieces</h1>
-        <p>The content slide uses a 3D coverflow built for ~10+ pieces. With only a few it goes lopsided (empty or uneven sides, a flip animation that barely moves). For each count below: <b>left</b> is the current coverflow, <b>right</b> is a recommended centered <b>gallery</b> — a static, balanced row that reads as a deliberate set. The headline count adapts too (“1 new piece”, “2 new pieces”…).</p>
+        <h1>Content slide — centered gallery (1–4 pieces)</h1>
+        <p>Final design at real deck size. When a campaign has <b>4 or fewer</b> pieces, the content slide shows a centered, balanced gallery instead of the 3D coverflow (which looks lopsided with only a few cards). 1 piece is a single hero card; 2–4 are an even centered row. At <b>5+</b> pieces it keeps the coverflow. The headline count adapts (“1 new piece”, “2 new pieces”…).</p>
       </header>
 
-      <div className="cst-rec">
-        <b>Recommendation — switch layout on piece count:</b>
-        <ul>
-          <li><code>≥ 5</code> → keep the coverflow (it needs the depth to look good)</li>
-          <li><code>2–4</code> → centered gallery: an even, balanced row, every card full-size</li>
-          <li><code>1</code> → a single hero card, centered (no carousel at all)</li>
-        </ul>
-      </div>
-
       {counts.map((n) => (
-        <Study key={n} id={`${n}`} title={`${n} content piece${n === 1 ? '' : 's'}`} desc={n === 1 ? 'A carousel of one — the coverflow has nothing to flank it.' : 'Coverflow sides go uneven; the gallery stays balanced.'}>
-          <div className="ccs-pair">
-            <div className="ccs-col">
-              <div className="ccs-cap"><b>Current</b> — coverflow</div>
-              <StageCard><ContentSpotlight maxItems={n} staticIdx={0} /></StageCard>
-            </div>
-            <div className="ccs-col">
-              <div className="ccs-cap"><b>Recommended</b> — centered gallery</div>
-              <StageCard><ContentSpotlight maxItems={n} layout="gallery" /></StageCard>
-            </div>
-          </div>
+        <Study key={n} id={`${n}`} title={`${n} content piece${n === 1 ? '' : 's'}`} desc={n === 1 ? 'Single hero card, centered.' : `Centered row of ${n}, every card full-size.`}>
+          <ContentSpotlight maxItems={n} layout="gallery" staticIdx={0} />
         </Study>
       ))}
 
-      <footer className="cst-foot">Content carousel · low-count study. Tell me the threshold (default: gallery below 5 pieces) and I’ll wire it into the live Content slide.</footer>
+      <footer className="cst-foot">Live behavior: ContentSpotlight auto-selects this gallery at ≤4 pieces (GALLERY_MAX = 4), coverflow at 5+. No props needed in production.</footer>
     </div>
   );
 }
