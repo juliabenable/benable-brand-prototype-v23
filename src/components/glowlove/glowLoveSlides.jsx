@@ -461,13 +461,13 @@ const VerifiedTick = ({ size = 13 }) => (
   </svg>
 );
 
-export function ContentSpotlight() {
+export function ContentSpotlight({ maxItems = null, staticIdx = null, layout = 'coverflow' } = {}) {
   // One carousel mixes reel posts + Benable rec cards; both flip through
   // the same compact coverflow. Interleave ~1 Benable rec after every 2
   // reel posts so the Benable cards surface early — the deck only lingers
   // on this slide a few flips before auto-advancing, so appending them at
   // the end would mean they never reach center.
-  const items = useMemo(() => {
+  const allItems = useMemo(() => {
     const posts = ALL_POSTS.map((p) => ({ kind: 'post', data: p }));
     const recs = BENABLE_RECS.map((r) => ({ kind: 'rec', data: r }));
     const out = [];
@@ -479,20 +479,26 @@ export function ContentSpotlight() {
     }
     return out;
   }, []);
+  // maxItems lets a study render the carousel at a specific content count;
+  // layout='gallery' is the low-count treatment (static, centered row);
+  // staticIdx freezes the active card (no auto-flip) for screenshots.
+  const items = useMemo(() => (maxItems != null ? allItems.slice(0, maxItems) : allItems), [allItems, maxItems]);
   const N = items.length;
-  const [idx, setIdx] = useState(0);
+  const gallery = layout === 'gallery';
+  const [idx, setIdx] = useState(staticIdx != null ? staticIdx : 0);
 
   useEffect(() => {
+    if (gallery || staticIdx != null || N <= 1) return undefined;
     const id = setInterval(() => setIdx((i) => (i + 1) % N), FLIP_MS);
     return () => clearInterval(id);
-  }, [N]);
+  }, [N, gallery, staticIdx]);
 
   return (
     <div className="gl-slide gl-slide--center gl-content2">
       <div className="gl-cnt-head">
-        <h2 className="gl-h2 gl-content2__h">In one easy, seamless campaign, you generated <span className="gl-accent">{TOTALS.pieces + BENABLE_RECS.length} new pieces of content</span> about your brand.</h2>
+        <h2 className="gl-h2 gl-content2__h">In one easy, seamless campaign, you generated <span className="gl-accent">{maxItems != null ? N : TOTALS.pieces + BENABLE_RECS.length} new piece{(maxItems != null ? N : TOTALS.pieces + BENABLE_RECS.length) === 1 ? '' : 's'} of content</span> about your brand.</h2>
       </div>
-      <div className="gl-cf">
+      <div className={`gl-cf${gallery ? ` gl-cf--gallery gl-cf--g${N}` : ''}`}>
         {items.map((item, i) => {
           // Circular signed distance from the active card so the deck wraps.
           let d = i - idx;
@@ -506,8 +512,10 @@ export function ContentSpotlight() {
           const rotY = ad === 0 ? 0 : -sign * 24;
           const scale = ad === 0 ? 1 : ad === 1 ? 0.82 : 0.66;
           const transform = `translate(-50%, -50%) translateX(${tx}px) translateZ(${tz}px) rotateY(${rotY}deg) scale(${scale})`;
-          const style = { transform, zIndex: 50 - ad, opacity: shown ? (ad === 0 ? 1 : ad === 1 ? 0.7 : 0.32) : 0 };
-          const isActive = ad === 0;
+          // Gallery mode lays cards out via CSS flex (no 3D transform), so
+          // skip the inline transform/opacity and render every card "active".
+          const style = gallery ? undefined : { transform, zIndex: 50 - ad, opacity: shown ? (ad === 0 ? 1 : ad === 1 ? 0.7 : 0.32) : 0 };
+          const isActive = gallery ? true : ad === 0;
 
           if (item.kind === 'post') {
             const p = item.data;
@@ -542,7 +550,7 @@ export function ContentSpotlight() {
           );
         })}
       </div>
-      <div className="gl-spot__count">{idx + 1} <span>/ {N}</span></div>
+      {!gallery && <div className="gl-spot__count">{idx + 1} <span>/ {N}</span></div>}
     </div>
   );
 }
